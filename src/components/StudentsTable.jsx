@@ -1,7 +1,12 @@
-import avatar from "../assets/avatar.png";
-import studentsData from "../assets/students.json";
+import { Fragment } from "react";
+import { getAllStudents } from "../data/students";
+import Search from "./Search";
+import StudentData from "./StudentData";
+import TableHeader from "./TableHeader";
 
 export default function StudentsTable() {
+  const studentClasses = getAllStudents();
+
   return (
     <section className="py-24 lg:pt-[120px] lg:pb-28">
       <div className="container">
@@ -9,99 +14,23 @@ export default function StudentsTable() {
           <h2 className="text-3xl lg:text-[40px] mb-9 font-bold">
             <span className="text-[#00CC8C]">Students</span> of the Year
           </h2>
-
-          <form>
-            <div className="flex">
-              <div className="relative overflow-hidden text-gray-50 md:min-w-[380px] lg:min-w-[440px] rounded-[63px]">
-                <input
-                  type="search"
-                  id="search-dropdown"
-                  className="z-20 block w-full bg-white px-4 py-2.5 pr-10 focus:outline-none rounded-[63px] placeholder:text-neutral-400 text-neutral-800"
-                  placeholder="Search by Student "
-                  required
-                />
-                <button
-                  type="submit"
-                  className="absolute right-0 inline-flex items-center justify-center w-10 top-0 h-full rounded-e-lg text-neutral-800"
-                >
-                  <svg
-                    className="h-4 w-4"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                    />
-                  </svg>
-                  <span className="sr-only">Search</span>
-                </button>
-              </div>
-            </div>
-          </form>
+          <Search />
         </div>
         <div className="max-w-[848px] mx-auto overflow-auto">
           <table className="w-full">
-            <thead>
-              <tr className="border-b border-[#FFFFFF0D]">
-                <th className="uppercase p-5 text-sm md:text-xl font-semibold md:min-w-[110px] text-left">
-                  ID
-                </th>
-                <th className="p-5 text-sm md:text-xl font-semibold text-left">
-                  Name
-                </th>
-                <th className="p-5 text-sm md:text-xl font-semibold">Scores</th>
-                <th className="p-5 text-sm md:text-xl font-semibold">
-                  Percentage
-                </th>
-              </tr>
-            </thead>
+            <TableHeader />
             <tbody>
-              {studentsData.classes.map((show_class) => (
-                <>
+              {studentClasses.map((classTitle) => (
+                <Fragment key={classTitle.classTitle}>
                   <tr className="bg-white/5">
-                    <td
-                      key={show_class.id}
-                      className="p-5 text-sm md:text-xl"
-                      colSpan="4"
-                    >
-                      {show_class.class_name}
+                    <td className="p-5 text-sm md:text-xl" colSpan="4">
+                      {classTitle.classTitle}
                     </td>
                   </tr>
-                  {show_class.students.map((student) => (
-                    <tr
-                      className="border-b border-[#7ECEB529]"
-                      key={student.id}
-                    >
-                      <td className="p-5 text-sm md:text-xl">{student.id}</td>
-                      <td className="p-5 text-sm md:text-xl">
-                        <div className="flex space-x-3 items-center">
-                          <img
-                            className="w-8 h-8"
-                            src={avatar}
-                            width="32"
-                            height="32"
-                            alt={student.name}
-                          />
-                          <span className="whitespace-nowrap">
-                            {student.name}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="p-5 text-sm md:text-xl text-center">
-                        {student.scores}
-                      </td>
-                      <td className="p-5 text-sm md:text-xl text-center">
-                        {student.percentage}
-                      </td>
-                    </tr>
+                  {classTitle.students.map((student) => (
+                    <StudentData key={student.id} {...student} />
                   ))}
-                </>
+                </Fragment>
               ))}
             </tbody>
           </table>
